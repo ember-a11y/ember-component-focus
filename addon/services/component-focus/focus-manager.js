@@ -1,4 +1,5 @@
 import Ember from 'ember';
+import $ from 'jquery';
 
 const run = Ember.run,
       RSVP = Ember.RSVP;
@@ -11,16 +12,16 @@ export default Ember.Service.extend({
   _nextToFocus: null,
 
   focusComponent(component, child) {
-    var $el = findElToFocus(component, child),
-        origTabIndex = $el.attr('tabindex');
+    var el = findElToFocus(component, child),
+        origTabIndex = el.getAttribute('tabindex');
 
-    if (origTabIndex === undefined && !isDefaultFocusable($el)) {
-      $el.attr('tabindex', -1);
-      $el.one('blur', () => $el.removeAttr('tabindex'));
+    if (origTabIndex === undefined && !isDefaultFocusable(el)) {
+      el.setAttribute('tabindex', -1);
+      $(el).one('blur', () => el.removeAttribute('tabindex'));
     }
 
-    $el.focus();
-    return $el;
+    el.focus();
+    return el;
   },
 
   focusComponentAfterRender(component, child) {
@@ -57,15 +58,27 @@ export default Ember.Service.extend({
 
 function findElToFocus(component, child) {
   if (!child) {
-    return component.$();
+    return component.element;
   }
-  if (typeof child === 'string') {
-    return component.$().find(child);
+
+  let isChildString = (typeof child === 'string');
+  if (!isChildString && child.hasOwnProperty('length')) {
+    // Child is probably a jQuery object, so unwrap it.
+    child = child[0];
   }
+
+  if (isChildString) {
+    let childEl = component.element.querySelector(child);
+    if (!childEl) {
+      throw new Error(`No child element found for selector '${child}'`);
+    }
+    return childEl;
+  }
+
   return child;
 }
 
-function isDefaultFocusable($el) {
-  var tagName = $el.get(0).tagName.toLowerCase();
+function isDefaultFocusable(el) {
+  var tagName = el.tagName.toLowerCase();
   return FOCUSABLE_TAGS.indexOf(tagName) > -1;
 }
