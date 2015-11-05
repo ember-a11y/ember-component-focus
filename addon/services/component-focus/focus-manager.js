@@ -1,5 +1,4 @@
 import Ember from 'ember';
-import $ from 'jquery';
 
 const run = Ember.run,
       RSVP = Ember.RSVP;
@@ -9,15 +8,16 @@ const FOCUSABLE_TAGS = ['a', 'button', 'input', 'option', 'select', 'textarea'];
 export default Ember.Service.extend({
   _afterRenderResolver: null,
   _afterRenderPromise: null,
+  _blurListener: null,
   _nextToFocus: null,
+  _nextToReset: null,
 
   focusComponent(component, child) {
-    var el = findElToFocus(component, child),
-        origTabIndex = el.getAttribute('tabindex');
+    let el = findElToFocus(component, child);
 
-    if (origTabIndex === undefined && !isDefaultFocusable(el)) {
+    if (!el.hasAttribute('tabindex') && !isDefaultFocusable(el)) {
       el.setAttribute('tabindex', -1);
-      $(el).one('blur', () => el.removeAttribute('tabindex'));
+      this.set('_nextToReset', el);
     }
 
     el.focus();
@@ -40,6 +40,25 @@ export default Ember.Service.extend({
     return afterRenderPromise;
   },
 
+  init() {
+    // Don't try to attach events in server side environments.
+    if (typeof document === 'undefined') {
+      return;
+    }
+
+    let blurListener = this._handleBlur.bind(this);
+    document.body.addEventListener('blur', blurListener, true);
+    this.set('_blurListener', blurListener);
+  },
+
+  willDestroy() {
+    let blurListener = this.get('_blurListener');
+
+    if (blurListener) {
+      document.body.removeEventListener('blur', blurListener, true);
+    }
+  },
+
   _afterRenderCallback() {
     var resolver = this.get('_afterRenderResolver'),
         {component, child} = this.get('_nextToFocus');
@@ -52,6 +71,14 @@ export default Ember.Service.extend({
 
     if (typeof resolver === 'function') {
       resolver(focusedEl);
+    }
+  },
+
+  _handleBlur() {
+    let elToReset = this.get('_nextToReset');
+    if (elToReset) {
+      elToReset.removeAttribute('tabindex');
+      this.set('_nextToReset', null);
     }
   }
 });
