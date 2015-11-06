@@ -1,7 +1,6 @@
 import Ember from 'ember';
 
-const run = Ember.run,
-      RSVP = Ember.RSVP;
+const { run, RSVP } = Ember;
 
 const FOCUSABLE_TAGS = ['a', 'button', 'input', 'option', 'select', 'textarea'];
 
@@ -12,7 +11,7 @@ export default Ember.Service.extend({
   _nextToFocus: null,
   _nextToReset: null,
 
-  focusComponent(component, child) {
+  focusComponent(component, child = null) {
     let el = findElToFocus(component, child);
 
     if (!el.hasAttribute('tabindex') && !isDefaultFocusable(el)) {
@@ -24,7 +23,7 @@ export default Ember.Service.extend({
     return el;
   },
 
-  focusComponentAfterRender(component, child) {
+  focusComponentAfterRender(component, child = null) {
     var afterRenderPromise = this.get('_afterRenderPromise');
 
     this.set('_nextToFocus', {component, child});
