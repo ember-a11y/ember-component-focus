@@ -41,15 +41,20 @@ export default Ember.Component.extend(FocusableComponent, {
 });
 ```
 
-The mixin adds one property and two methods to your component.
+The mixin adds two properties and two methods to your component.
 
 ### focusNode Property
 
 The `focusNode` property allows you to specify the selector of one of your
 component's child elements that you want to receive focus when one of the
 methods added by the mixin is invoked. It defaults to `null`, so override it in
-your component's definition if you want to set a default element for focus.
+your component's definition if you want to set a default element to focus.
 
+### componentFocusManager Property
+
+This is a reference to the Focus Manager service that handles interaction with
+the DOM and listening for DOM events. You probably won't need to use it
+directly.
 
 ### focus() Method
 
@@ -92,8 +97,7 @@ up receiving focus.
 
 ```javascript
 // This component will focus the element for a new todo after the model object
-// for that todo has been saved and the element representing the todo has
-rendered.
+// for that todo has been saved and the element representing the todo has rendered.
 export default Ember.Component.extend(FocusableComponent, {
   actions: {
     addTodo() {
