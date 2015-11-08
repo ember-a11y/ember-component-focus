@@ -11,9 +11,15 @@ module('Unit | Mixin | focusable component', {
     subject = Ember.Object.extend(FocusableComponentMixin).create();
 
     manager = {
-      focusComponent: sinon.spy(),
-      focusComponentAfterRender: sinon.spy()
+      focusComponent: sinon.spy(function() {
+        return manager.focusComponent.returnVal;
+      }),
+      focusComponentAfterRender: sinon.spy(function() {
+        return manager.focusComponentAfterRender.returnVal;
+      })
     };
+    manager.focusComponent.returnVal = 'foo';
+    manager.focusComponentAfterRender.returnVal = 'bar';
 
     subject.set('componentFocusManager', manager);
   }
@@ -43,5 +49,10 @@ module('Unit | Mixin | focusable component', {
     subject[method]('bar');
 
     assert.ok(manager[managerMethod].calledWith(subject, 'bar'));
+  });
+
+  test(`${method}() returns the return value of the manager call`, function(assert) {
+    assert.expect();
+    assert.equal(subject[method](), manager[managerMethod].returnVal);
   });
 });
