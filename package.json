@@ -1,7 +1,7 @@
 {
   "name": "ember-component-focus",
-  "version": "0.0.0",
-  "description": "The default blueprint for ember-cli addons.",
+  "version": "0.1.0",
+  "description": "An Ember addon for managing focus within components.",
   "directories": {
     "doc": "doc",
     "test": "tests"
@@ -15,8 +15,8 @@
   "engines": {
     "node": ">= 0.10.0"
   },
-  "author": "",
-  "license": "MIT",
+  "author": "Will Hastings <whastings@linkedin.com>",
+  "license": "Apache-2.0",
   "devDependencies": {
     "broccoli-asset-rev": "^2.1.2",
     "ember-cli": "1.13.8",
@@ -39,7 +39,11 @@
     "ember-try": "0.0.6"
   },
   "keywords": [
-    "ember-addon"
+    "accessibility",
+    "component",
+    "ember-addon",
+    "focus",
+    "tabindex"
   ],
   "dependencies": {
     "ember-cli-babel": "^5.1.3"
