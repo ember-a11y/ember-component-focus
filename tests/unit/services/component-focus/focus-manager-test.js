@@ -1,15 +1,22 @@
+import Ember from 'ember';
 import sinon from 'sinon';
 import { moduleFor, test } from 'ember-qunit';
 
+const { run } = Ember;
+
 var component,
+    focusComponentSpy,
     focusSpy,
     inputEl,
+    runSpy,
     service,
     spanEl;
 
 moduleFor('service:component-focus/focus-manager', 'Unit | Service | component focus/focus manager', {
   beforeEach() {
     service = this.subject();
+    focusComponentSpy = sinon.spy(service, 'focusComponent');
+    runSpy = sinon.spy(run, 'scheduleOnce');
 
     inputEl = document.createElement('input');
     focusSpy = sinon.spy(inputEl, 'focus');
@@ -21,6 +28,8 @@ moduleFor('service:component-focus/focus-manager', 'Unit | Service | component f
 
   afterEach() {
     [inputEl, spanEl].forEach((el) => document.body.removeChild(el));
+    focusComponentSpy.restore();
+    runSpy.restore();
   }
 });
 
@@ -98,5 +107,39 @@ test('focusComponent() throws an error if selector for child is not found', func
     }
   };
 
-  assert.throws(() => service.focusComponent(component, '#foo'));
+  assert.throws(
+    () => service.focusComponent(component, '#foo'),
+    /No child element found for selector '#foo'/
+  );
+});
+
+test('focusComponentAfterRender() calls focusComponent() after next render', function(assert) {
+  assert.expect(3);
+  run(() => service.focusComponentAfterRender(component, inputEl));
+
+  assert.ok(runSpy.calledWith('afterRender'));
+  assert.ok(focusComponentSpy.calledOnce);
+  assert.ok(focusComponentSpy.calledWith(component, inputEl));
+});
+
+test('focusComponentAfterRender() returns a promise that is resolved with the focused el', function(assert) {
+  assert.expect(1);
+  let returnPromise;
+
+  component.element = inputEl;
+  run(() => returnPromise = service.focusComponentAfterRender(component));
+
+  return returnPromise
+    .then((focusedEl) => assert.equal(focusedEl, inputEl));
+});
+
+test('focusComponentAfterRender() only calls focusComponent() for the last request', function(assert) {
+  assert.expect();
+  run(() => {
+    service.focusComponentAfterRender(component, inputEl);
+    service.focusComponentAfterRender(component, spanEl);
+  });
+
+  assert.ok(focusComponentSpy.calledOnce);
+  assert.ok(focusComponentSpy.calledWith(component, spanEl));
 });
