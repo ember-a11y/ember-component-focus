@@ -83,7 +83,7 @@ export default Ember.Component.extend(FocusableComponent, {
 });
 ```
 
-### focusAfterRender() method
+### focusAfterRender() Method
 
 This method works just like focus, accepting the same arguments, but it
 schedules setting focus for after the next render cycle (using the [Ember Run
