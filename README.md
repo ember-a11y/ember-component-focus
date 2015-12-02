@@ -125,3 +125,7 @@ under the License is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR
 CONDITIONS OF ANY KIND, either express or implied.
 
 [apache-license]: http://www.apache.org/licenses/LICENSE-2.0
+
+## Notice
+
+ember is a trademark of Tilde Inc. and is used with permission.
