@@ -11,7 +11,7 @@
     "start": "ember server",
     "test": "ember test"
   },
-  "repository": "",
+  "repository": "linkedin/ember-component-focus",
   "engines": {
     "node": ">= 0.10.0"
   },
