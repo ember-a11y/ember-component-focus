@@ -26,6 +26,12 @@ Or you can install directly from npm:
 npm install --save ember-component-focus
 ```
 
+## Demo
+
+[This todo app][demo-app] makes use of ember-component-focus to create an accessible UI.
+
+[demo-app]: https://github.com/whastings/ember-todo-app
+
 ## Usage
 
 To use the focus management methods in your component, you need to mix-in

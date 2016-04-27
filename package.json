@@ -1,6 +1,6 @@
 {
   "name": "ember-component-focus",
-  "version": "0.2.0",
+  "version": "0.2.1",
   "description": "An Ember addon for managing focus within components.",
   "directories": {
     "doc": "doc",
@@ -11,7 +11,7 @@
     "start": "ember server",
     "test": "ember test"
   },
-  "repository": "linkedin/ember-component-focus",
+  "repository": "ember-a11y/ember-component-focus",
   "engines": {
     "node": ">= 0.10.0"
   },
