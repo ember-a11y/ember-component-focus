@@ -23,13 +23,20 @@ export default Ember.Service.extend({
 
   focusComponent(component, child = null) {
     let el = findElToFocus(component, child);
+    let isFocusable = el.hasAttribute('tabindex') || isDefaultFocusable(el);
 
-    if (!el.hasAttribute('tabindex') && !isDefaultFocusable(el)) {
+    if (!isFocusable) {
       el.setAttribute('tabindex', -1);
-      this.set('_nextToReset', el);
     }
 
     el.focus();
+
+    // Done after `el.focus()` to prevent the `blur` handler from triggering
+    // too early.
+    if (!isFocusable) {
+      this.set('_nextToReset', el);
+    }
+
     return el;
   },
 

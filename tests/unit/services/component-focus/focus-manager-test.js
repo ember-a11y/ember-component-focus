@@ -87,6 +87,21 @@ test('focusComponent() will register the child to be reset on blur if it sets ta
   assert.notOk(spanEl.hasAttribute('tabindex'));
 });
 
+test('focusComponent() can focus on a new element when another element has focus first', function(assert) {
+  assert.expect(2);
+
+  // create element to focus on first
+  var focusEl = document.createElement('button');
+  document.body.appendChild(focusEl);
+  focusEl.focus();
+  assert.equal(document.activeElement, focusEl, 'A new element could not be focused on');
+
+  service.focusComponent(component, spanEl);
+  assert.equal(document.activeElement, spanEl, 'The focus component did not focus properly');
+
+  document.body.removeChild(focusEl);
+});
+
 test('focusComponent() does not change tabindex on a child that already has it', function(assert) {
   assert.expect(1);
   spanEl.setAttribute('tabindex', 0);
@@ -144,7 +159,7 @@ test('focusComponentAfterRender() returns a promise that is resolved with the fo
 });
 
 test('focusComponentAfterRender() only calls focusComponent() for the last request', function(assert) {
-  assert.expect();
+  assert.expect(2);
   run(() => {
     service.focusComponentAfterRender(component, inputEl);
     service.focusComponentAfterRender(component, spanEl);
