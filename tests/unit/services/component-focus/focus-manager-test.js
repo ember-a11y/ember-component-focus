@@ -157,7 +157,7 @@ test('focusComponentAfterRender() returns a promise that is resolved with the fo
 });
 
 test('focusComponentAfterRender() only calls focusComponent() for the last request', function(assert) {
-  assert.expect();
+  assert.expect(2);
   run(() => {
     service.focusComponentAfterRender(component, inputEl);
     service.focusComponentAfterRender(component, spanEl);
