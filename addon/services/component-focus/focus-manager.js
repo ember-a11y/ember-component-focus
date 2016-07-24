@@ -83,9 +83,9 @@ export default Ember.Service.extend({
     }
   },
 
-  _handleBlur() {
+  _handleBlur(e) {
     let elToReset = this.get('_nextToReset');
-    if (elToReset) {
+    if (elToReset && e.target === elToReset) {
       elToReset.removeAttribute('tabindex');
       this.set('_nextToReset', null);
     }
