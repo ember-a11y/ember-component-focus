@@ -98,6 +98,8 @@ test('focusComponent() can focus on a new element when another element has focus
 
   service.focusComponent(component, spanEl);
   assert.equal(document.activeElement, spanEl, 'The focus component did not focus properly');
+
+  document.body.removeChild(focusEl);
 });
 
 test('focusComponent() does not change tabindex on a child that already has it', function(assert) {
