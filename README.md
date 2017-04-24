@@ -82,6 +82,7 @@ export default Ember.Component.extend(FocusableComponent, {
   // ...
 
   didInsertElement() {
+    this._super(...arguments);
     this.focus();
   },
 
