@@ -8,15 +8,17 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  */
 
-import Ember from 'ember';
+import { inject as service } from '@ember/service';
 
-export default Ember.Mixin.create({
+import Mixin from '@ember/object/mixin';
+
+export default Mixin.create({
   /**
    * Reference to the Focus Manager service.
    * @property componentFocusManager
    * @type Object
    */
-  componentFocusManager: Ember.inject.service('component-focus/focus-manager'),
+  componentFocusManager: service('component-focus/focus-manager'),
   /**
    * Selector string indicating the element to be focused when focus() or
    * focusAfterRender() are called on the component.
