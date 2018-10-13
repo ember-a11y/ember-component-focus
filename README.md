@@ -12,8 +12,7 @@ that aren't focusable by default and removing `tabindex="-1"` on blur.
 
 [ember-cli]: http://www.ember-cli.com/
 
-Installation
-------------------------------------------------------------------------------
+## Installation
 
 Run the following inside your Ember application to install this addon.
 
@@ -40,8 +39,8 @@ the `focusable-component` mixin:
 
 ```javascript
 // app/components/your-component.js
-import Ember from 'ember';
-import FocusableComponent from 'ember-component-focus/mixins/focusable-component';
+import Ember from "ember";
+import FocusableComponent from "ember-component-focus/mixins/focusable-component";
 
 export default Ember.Component.extend(FocusableComponent, {
   // Your component's definition...
@@ -77,15 +76,15 @@ receiving focus.
 ```javascript
 // When this component is first inserted into the DOM, it will set focus to its
 // header element.
-export default Ember.Component.extend(FocusableComponent, {
-  focusNode: 'h1',
+export default Component.extend(FocusableComponent, {
+  focusNode: "h1",
 
   // ...
 
   didInsertElement() {
     this._super(...arguments);
     this.focus();
-  },
+  }
 
   // ...
 });
@@ -106,20 +105,22 @@ up receiving focus.
 ```javascript
 // This component will focus the element for a new todo after the model object
 // for that todo has been saved and the element representing the todo has rendered.
-export default Ember.Component.extend(FocusableComponent, {
+export default Component.extend(FocusableComponent, {
   actions: {
     addTodo() {
-      let todoName = this.get('todoName');
-      let todo = this.store.createRecord('Todo', {name: todoName});
-      todo.save().then(() => this.focusAfterRender(`[data-id=todo-${todo.id}]`));
+      let todoName = this.get("todoName");
+      let todo = this.store.createRecord("Todo", { name: todoName });
+      todo
+        .save()
+        .then(() => this.focusAfterRender(`[data-id=todo-${todo.id}]`));
     }
-  },
+  }
 
   // ...
 });
 ```
 
-[run-loop]: http://emberjs.com/api/classes/Ember.run.html
+[run-loop]: https://emberjs.com/api/ember/release/functions/@ember%2Frunloop/run
 
 ## License
 
