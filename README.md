@@ -39,10 +39,10 @@ the `focusable-component` mixin:
 
 ```javascript
 // app/components/your-component.js
-import Ember from "ember";
-import FocusableComponent from "ember-component-focus/mixins/focusable-component";
+import Component from '@ember/component';
+import FocusableComponent from 'ember-component-focus/mixins/focusable-component';
 
-export default Ember.Component.extend(FocusableComponent, {
+export default Component.extend(FocusableComponent, {
   // Your component's definition...
 });
 ```
@@ -77,7 +77,7 @@ receiving focus.
 // When this component is first inserted into the DOM, it will set focus to its
 // header element.
 export default Component.extend(FocusableComponent, {
-  focusNode: "h1",
+  focusNode: 'h1',
 
   // ...
 
@@ -108,8 +108,8 @@ up receiving focus.
 export default Component.extend(FocusableComponent, {
   actions: {
     addTodo() {
-      let todoName = this.get("todoName");
-      let todo = this.store.createRecord("Todo", { name: todoName });
+      let todoName = this.todoName;
+      let todo = this.store.createRecord('Todo', { name: todoName });
       todo
         .save()
         .then(() => this.focusAfterRender(`[data-id=todo-${todo.id}]`));
