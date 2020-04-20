@@ -12,7 +12,6 @@ that aren't focusable by default and removing `tabindex="-1"` on blur.
 
 [ember-cli]: http://www.ember-cli.com/
 
-## Installation
 
 Run the following inside your Ember application to install this addon.
 
