@@ -44,20 +44,20 @@ module('service:component-focus/focus-manager', 'Unit | Service | component focu
     runSpy.restore();
   }),
 
-  test('focusComponent() calls focus() on the passed child', function(assert) {
+  test('focusComponent() calls focus() on the passed child', async function(assert) {
     assert.expect(1);
-    service.focusComponent(component, inputEl);
+    await service.focusComponent(component, inputEl);
     assert.ok(focusSpy.calledOnce);
   });
 
-  test('focusComponent() calls focus() on component element if no child passed', function(assert) {
+  test('focusComponent() calls focus() on component element if no child passed', async function(assert) {
     assert.expect(1);
     component.element = inputEl;
-    service.focusComponent(component);
+    await service.focusComponent(component);
     assert.ok(focusSpy.calledOnce);
   });
 
-  test('focusComponent() searches for element in component when given a string for child', function(assert) {
+  test('focusComponent() searches for element in component when given a string for child', async function(assert) {
     assert.expect(2);
     component.element = {
       querySelector: sinon.spy(function() {
@@ -65,67 +65,67 @@ module('service:component-focus/focus-manager', 'Unit | Service | component focu
       })
     };
 
-    service.focusComponent(component, '#foo');
+    await service.focusComponent(component, '#foo');
     assert.ok(component.element.querySelector.calledWith('#foo'));
     assert.ok(focusSpy.calledOnce);
   });
 
-  test('focusComponent() sets tabindex to -1 on child that is not focusable', function(assert) {
+  test('focusComponent() sets tabindex to -1 on child that is not focusable', async function(assert) {
     assert.expect(2);
     focusSpy = sinon.spy(spanEl, 'focus');
 
-    service.focusComponent(component, spanEl);
+    await service.focusComponent(component, spanEl);
     assert.equal(spanEl.getAttribute('tabindex'), '-1');
     assert.ok(focusSpy.calledOnce);
   });
 
-  test('focusComponent() will register the child to be reset on blur if it sets tabindex', function(assert) {
+  test('focusComponent() will register the child to be reset on blur if it sets tabindex', async function(assert) {
     assert.expect(2);
 
-    service.focusComponent(component, spanEl);
+    await service.focusComponent(component, spanEl);
     assert.equal(spanEl.getAttribute('tabindex'), '-1');
-    spanEl.blur();
+    await spanEl.blur();
     assert.notOk(spanEl.hasAttribute('tabindex'));
   });
 
-  test('focusComponent() can focus on a new element when another element has focus first', function(assert) {
+  test('focusComponent() can focus on a new element when another element has focus first', async function(assert) {
     assert.expect(2);
 
     // create element to focus on first
-    var focusEl = document.createElement('button');
+    const focusEl = document.createElement('button');
     document.body.appendChild(focusEl);
-    focusEl.focus();
+    await focusEl.focus();
     assert.equal(document.activeElement, focusEl, 'A new element could not be focused on');
 
-    service.focusComponent(component, spanEl);
+    await service.focusComponent(component, spanEl);
     assert.equal(document.activeElement, spanEl, 'The focus component did not focus properly');
 
     document.body.removeChild(focusEl);
   });
 
-  test('focusComponent() does not change tabindex on a child that already has it', function(assert) {
+  test('focusComponent() does not change tabindex on a child that already has it', async function(assert) {
     assert.expect(1);
     spanEl.setAttribute('tabindex', 0);
 
-    service.focusComponent(component, spanEl);
+    await service.focusComponent(component, spanEl);
     assert.equal(spanEl.getAttribute('tabindex'), '0');
   });
 
-  test('focusComponent() does not set tabindex on a default focusable child', function(assert) {
+  test('focusComponent() does not set tabindex on a default focusable child', async function(assert) {
     assert.expect(1);
 
-    service.focusComponent(component, inputEl);
+    await service.focusComponent(component, inputEl);
     assert.notOk(inputEl.hasAttribute('tabindex'));
   });
 
-  test('focusComponent() picks first element when passed an array/array-like child', function(assert) {
+  test('focusComponent() picks first element when passed an array/array-like child', async function(assert) {
     assert.expect(1);
 
-    service.focusComponent(component, [inputEl]);
+    await service.focusComponent(component, [inputEl]);
     assert.ok(focusSpy.calledOnce);
   });
 
-  test('focusComponent() throws an error if selector for child is not found', function(assert) {
+  test('focusComponent() throws an error if selector for child is not found', async function(assert) {
     assert.expect(1);
     component.element = {
       querySelector() {
@@ -139,7 +139,7 @@ module('service:component-focus/focus-manager', 'Unit | Service | component focu
     );
   });
 
-  test('focusComponentAfterRender() calls focusComponent() after next render', function(assert) {
+  test('focusComponentAfterRender() calls focusComponent() after next render', async function(assert) {
     assert.expect(3);
     run(() => service.focusComponentAfterRender(component, inputEl));
 
@@ -148,7 +148,7 @@ module('service:component-focus/focus-manager', 'Unit | Service | component focu
     assert.ok(focusComponentSpy.calledWith(component, inputEl));
   });
 
-  test('focusComponentAfterRender() returns a promise that is resolved with the focused el', function(assert) {
+  test('focusComponentAfterRender() returns a promise that is resolved with the focused el', async function(assert) {
     assert.expect(1);
     let returnPromise;
 
@@ -159,7 +159,7 @@ module('service:component-focus/focus-manager', 'Unit | Service | component focu
       .then((focusedEl) => assert.equal(focusedEl, inputEl));
   });
 
-  test('focusComponentAfterRender() only calls focusComponent() for the last request', function(assert) {
+  test('focusComponentAfterRender() only calls focusComponent() for the last request', async function(assert) {
     assert.expect(2);
     run(() => {
       service.focusComponentAfterRender(component, inputEl);
