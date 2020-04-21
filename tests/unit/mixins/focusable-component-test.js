@@ -8,7 +8,7 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  */
 
-import Ember from 'ember';
+import EmberObject from '@ember/object';
 import FocusableComponentMixin from 'ember-component-focus/mixins/focusable-component';
 import sinon from 'sinon';
 import { module, test } from 'qunit';
@@ -18,7 +18,7 @@ var manager,
 
 module('Unit | Mixin | focusable component', {
   beforeEach() {
-    subject = Ember.Object.extend(FocusableComponentMixin).create();
+    subject = EmberObject.extend(FocusableComponentMixin).create();
 
     manager = {
       focusComponent: sinon.spy(function() {
