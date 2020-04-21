@@ -8,13 +8,13 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  */
 
-import Ember from 'ember';
-
-const { run, RSVP } = Ember;
+import { run } from '@ember/runloop';
+import RSVP from 'rsvp';
+import Service from '@ember/service';
 
 const FOCUSABLE_TAGS = ['a', 'button', 'input', 'option', 'select', 'textarea'];
 
-export default Ember.Service.extend({
+export default Service.extend({
   _afterRenderResolver: null,
   _afterRenderPromise: null,
   _blurListener: null,
@@ -58,6 +58,7 @@ export default Ember.Service.extend({
 
   init() {
     // Don't try to attach events in server side environments.
+    this._super(...arguments)
     if (typeof document === 'undefined') {
       return;
     }
