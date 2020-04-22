@@ -12,14 +12,14 @@ import EmberObject from '@ember/object';
 import FocusableComponentMixin from 'ember-component-focus/mixins/focusable-component';
 import sinon from 'sinon';
 import { module, test } from 'qunit';
+import { setupTest } from 'ember-qunit';
 
-var manager,
-    subject;
+module('Unit | Mixin | focusable component', function(hooks) {
+  setupTest(hooks);
 
-module('Unit | Mixin | focusable component', {
-  beforeEach() {
-    subject = EmberObject.extend(FocusableComponentMixin).create();
-
+  hooks.beforeEach(function() {
+    this.subject = EmberObject.extend(FocusableComponentMixin).create();
+    let manager = {}
     manager = {
       focusComponent: sinon.spy(function() {
         return manager.focusComponent.returnVal;
@@ -30,39 +30,43 @@ module('Unit | Mixin | focusable component', {
     };
     manager.focusComponent.returnVal = 'foo';
     manager.focusComponentAfterRender.returnVal = 'bar';
-
-    subject.set('componentFocusManager', manager);
-  }
-});
-
-['focus', 'focusAfterRender'].forEach(function(method) {
-  var managerMethod = method.replace('focus', 'focusComponent');
-
-  test(`${method}() calls manager with itself and null by default`, function(assert) {
-    assert.expect(2);
-    subject[method]();
-
-    assert.ok(manager[managerMethod].calledOnce);
-    assert.ok(manager[managerMethod].calledWith(subject, null));
+    this.manager = manager;
+    this.subject.set('componentFocusManager', manager);
   });
 
-  test(`${method}() calls manager with itself and value of focusNode`, function(assert) {
-    assert.expect(1);
-    subject.set('focusNode', 'foo');
-    subject[method]();
+  ['focus', 'focusAfterRender'].forEach(function(method) {
+    let managerMethod = method.replace('focus', 'focusComponent');
 
-    assert.ok(manager[managerMethod].calledWith(subject, 'foo'));
-  });
+    test(`${method}() calls manager with itself and null by default`, async function(assert) {
+      let { subject, manager } = this;
+      assert.expect(2);
+      subject[method]();
 
-  test(`${method}() calls manager with itself and passed child`, function(assert) {
-    assert.expect(1);
-    subject[method]('bar');
+      assert.ok(manager[managerMethod].calledOnce);
+      assert.ok(manager[managerMethod].calledWith(subject, null));
+    });
 
-    assert.ok(manager[managerMethod].calledWith(subject, 'bar'));
-  });
+    test(`${method}() calls manager with itself and value of focusNode`, async function(assert) {
+      let { subject, manager } = this;
+      assert.expect(1);
+      subject.set('focusNode', 'foo');
+      subject[method]();
 
-  test(`${method}() returns the return value of the manager call`, function(assert) {
-    assert.expect();
-    assert.equal(subject[method](), manager[managerMethod].returnVal);
+      assert.ok(manager[managerMethod].calledWith(subject, 'foo'));
+    });
+
+    test(`${method}() calls manager with itself and passed child`, async function(assert) {
+      let { subject, manager } = this;
+      assert.expect(1);
+      subject[method]('bar');
+
+      assert.ok(manager[managerMethod].calledWith(subject, 'bar'));
+    });
+
+    test(`${method}() returns the return value of the manager call`, async function(assert) {
+      let { subject, manager } = this;
+      assert.expect();
+      assert.equal(subject[method](), manager[managerMethod].returnVal);
+    });
   });
 });
