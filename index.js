@@ -12,5 +12,5 @@
 'use strict';
 
 module.exports = {
-  name: 'ember-component-focus'
+  name: require('./package').name
 };
